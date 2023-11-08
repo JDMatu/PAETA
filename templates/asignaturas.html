@@ -1,0 +1,258 @@
+{% extends "maestra.html" %}
+
+{% block contenido %} 
+    <div class="title_container">
+        <h2 class="titulo" id="titulo">Asignaturas</h2>
+        <p class="description" id="description">Módulo para crear, modificar, deshabilitar y consultar asignaturas.</p>
+
+        <div class="actions" id="actions">
+            <button class="action" id="insert_user">Crear Asignatura</button>
+            
+            <span class="icon_action"></span>
+        </div>
+    </div>
+
+
+    <div class="Table-g">
+        <div class="Table-row Table-header">
+            <div class="Table-row-item-asig u-Flex-check"> </div>
+            <div class="Table-row-item-asig u-Flex-asignatura">Asignatura</div>    
+            <div class="Table-row-item-asig u-Flex-depart">Departamento</div>
+            <div class="Table-row-item-asig u-Flex-estado">Estado</div>
+            <div class="Table-row-item-asig u-Flex-admin">Acciones</div>
+        </div>
+        {% for asignatura in Asignaturas %}
+
+            <div class='Table-row' id='user_table'>  <!-- Div con contenido de usuarios -->
+
+                <div class='Table-row-item-asig u-Flex-check' data-header='Select'> 
+                            
+                    <input  class='checkbox checkbox_user' type='checkbox' checked='checked'/>
+                            
+                </div>
+                    
+                <div class='Table-row-item-asig u-Flex-nombre' data-header='Nombre'>
+                    
+                    <img class='picture_profile' src='static/img/profile.png' alt=''>
+                    
+                    <div> <!-- Se usa el id de estos para modificar cada campo -->
+                        <p class="name_user" id="user_name">{{asignatura[1]}}</p>
+                        <p class="id_user" id="user_id">{{asignatura[0]}}</p>
+                    </div>
+                </div>
+
+                <div class="Table-row-item-asig u-Flex-depart" data-header="Departamento" id="user_depart">{{asignatura[3]}}</div>
+                <div class="Table-row-item-asig u-Flex-estado" data-header="Estado" id="user_estado">{{asignatura[4]}}</div>
+                <div class='Table-row-item-asig u-Flex-admin' data-header='Acciones' id='user_estado'> 
+                <div class="icons-actions"> 
+                            
+                    
+                    <button class="edit-user-btn" id="edit_user_btn" onclick="mostrarFormularioEdicion('{{asignatura[0]}}','{{asignatura[1]}}','{{asignatura[2]}}','{{asignatura[4]}}')">
+                        <span class="icon-edit" id="edit-user"></span> 
+                    </button>
+ 
+
+                    <a href="{{url_for('eliminar_asignatura', id=asignatura[0])}}">
+
+                        <button class="trash-user-btn" id="trash_user_btn">
+                            <span id="trash-user" class="icon-trash"></span> 
+                        </button>
+                    </a>
+                    </div> 
+                </div>
+            </div>
+            <!-- <div class='Table-row-item-asig u-Flex-correo' data-header='Correo' id='user_mail'>falpizar@iacsa.ed.cr</div> -->
+                    
+        {% endfor %}    
+    </div>
+
+    <!-- Modal Crear Asignatura *******************************************************************************************-->
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+      
+            <div class="head_title">
+                <h4>Crear Asignatura</h4>
+                <span class="close" id="close-alter"></span>
+            </div>
+      
+            <!-- Asignatura -->
+      
+      
+            <form method="post" action="{{url_for('guardar_Asignatura')}}">
+
+                <div class="Usuario">
+                    <input type="hidden" id="idUsuario">
+                    <div class="field_form">
+                      <label>
+                          <span class="modal_input-title">Asignatura</span>
+                      </label>
+                      <input class="modal_input" placeholder="Digite nombre de asignatura" name="nombreA" type="text"/>
+                    </div>
+                   
+                    <div class="field_form">
+                      <label>
+                          <span class="modal_input-title">Departamento</span>
+                      </label>            
+                        <select  class="modal_input" name="departamentoA">
+                          {% for departamento in Departamentos %}
+                              <option value="{{departamento[0]}}">{{departamento[1]}}</option>
+                          {% endfor %}
+                        </select>         
+                    </div>  
+              </div>
+
+                <div class="actions">
+                    <div class="button_actions">
+                        <button type="submit" class="action action_save">Guardar</button>
+                        <!-- <button id="cancel" class="action action_delete">Cancelar</button> -->
+                    </div>
+                </div>
+
+            </form>
+          
+        </div>
+      
+    </div>
+
+     <!-- Modal Editar Usuario *******************************************************************************************-->
+
+     <div id="myModal_edit" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+      
+            <div class="head_title">
+                <h4>Editar Asignatura</h4>
+                <span class="close_edit"></span>
+
+            </div>
+      
+            <!-- Usuario -->
+      
+      
+            <form method="post" action="{{url_for('modificar_Asignatura')}}">
+
+                <div class="Usuario">
+      
+                    <input name="idAsignatura" id="idAsignatura" type="hidden">
+                    <div class="field_form">
+                    <label>
+                        <span class="modal_input-title">Asignatura</span>
+                    </label>
+                    <input class="modal_input" placeholder="Nombre de Asignatura" name="nombreA" id="nombreA" type="text"/>
+        
+                    </div>
+                    <div class="field_form">
+                    <label>
+                        <span class="modal_input-title">Departamento</span>
+                    </label>
+                    
+                    <select  class="modal_input" name="departamentoA" id="departamentoA">
+                      {% for departamento in Departamentos %}
+                          <option value="{{departamento[0]}}">{{departamento[1]}}</option>
+                      {% endfor %}
+                    </select>        
+                    </div>    
+        
+                    <div class="field_form">
+                      <label>
+                          <span class="modal_input-title">Estado</span>
+                      </label>
+                      
+                      <select  class="modal_input" name="estado" id="estado">                
+                            <option value="Activo">Activo</option>
+                            <option value="Inactivo">Inactivo</option>         
+                      </select>        
+                    </div>    
+                </div>
+
+                <div class="actions">
+                    <div class="button_actions">
+                        <button type="submit" class="action action_save">Guardar</button>
+                        <!-- <button id="cancel_edit" class="action action_delete">Cancelar</button> -->
+                    </div>
+                </div>
+
+            </form>
+          
+        </div>
+      
+    </div>
+      
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        var modal_edit = document.getElementById("myModal_edit");
+        
+        // Get the button that opens the modal
+        var btn = document.getElementById("insert_user");
+        //var cancel_btn = document.getElementById("cancel");
+
+        var btn_edit = document.getElementById("edit_user_btn");
+        //var cancel_btn_edit = document.getElementById("cancel_edit");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        var span_edit = document.getElementsByClassName("close_edit")[0];
+        
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+    
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        span_edit.onclick = function() {
+            document.getElementById("myModal_edit").style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal_edit.style.display = "none";
+            }
+        }
+
+        // BOTÓN DE CERRAR
+        /*cancel_btn.onclick = function() {
+            modal.style.display = "none";
+        }*/
+
+        /*cancel_btn_edit.onclick = function() {
+            modal_edit.style.display = "none";
+        }*/
+        
+
+        function mostrarFormularioEdicion(id, nombreAsig, idDepartamento, estado){                   
+            document.getElementById("idAsignatura").value = id;
+            document.getElementById("nombreA").value = nombreAsig;
+            document.getElementById("departamentoA").value = idDepartamento;
+            document.getElementById("estado").value = estado;
+            document.getElementById("myModal_edit").style.display = "block";
+
+        }
+
+        if(window.history.replaceState)
+        {
+            window.history.replaceState(null,null,"/asignaturas");
+        }
+
+    </script>
+
+   
+
+{% endblock %}

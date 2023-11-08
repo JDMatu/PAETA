@@ -1,0 +1,379 @@
+{% extends "maestra.html" %}
+
+{% block contenido %} 
+    <div class="title_container">
+        <h2 class="titulo" id="titulo">Videos</h2>
+        <p class="description" id="description">Módulo para crear, modificar, deshabilitar y consultar material audio-visual.</p>
+
+        <div class="actions" id="actions">
+            <button class="action" id="insert_user" onclick="crearVideo()">Registrar Material</button>            
+            <span class="icon_action"></span>
+        </div>
+    </div>
+
+    <div class="buscadores">
+
+      <div class="buscador_container">
+          <span class="icon_buscador"></span>
+          <input type="text" name="" class="buscador" id="buscador2" placeholder="Buscar" onchange="buscarV(this.value)">
+      </div>
+
+      <div class="filtrador_container">
+          <select class="filtrador" name="select_depar" id="select_depar" onchange="VideosXDepar(this.value)">
+            <option value="" >Seleccionar Departamento</option>
+            {% for departamento in Departamentos%}
+              {%if departamento[0] != 15%}
+                <option value= {{departamento[0]}}>{{departamento[1]}}</option>
+              {%endif%}
+            {% endfor%}
+          </select>
+          
+      
+      </div>
+      <div class="filtrador_container">
+        <select class="filtrador" name="select_estado" id="select_estado" onchange="VideosXestado(this.value)">
+            <option value="" >Selecionar Estados</option>
+            <option value= "Activo">Activo</option>
+            <option value= "Inactivo">Inactivo</option>
+
+        </select>
+        
+    
+        </div>
+
+    </div>
+
+
+    <div class="complete-videoprev-video">
+
+        <!-- Videos -->
+
+        
+        <div class="videos_container">
+          <script>
+            var current_user_iD = current_user.iDdepartamento;
+          </script>
+            {% for material in Materiales %}
+            
+              <div class="PrevVideo" style="cursor:pointer;" data-video-id="{{ material[0] }}"> 
+
+                <div class="col_img">
+                  <!--
+                  <video class="video_class" disable preload="metadata" >
+                    <source src="../static/videos/{{material[1]}}.mp4" >
+                  </video>
+                  -->
+
+                  {% if material[11] == 1 %}
+                  <img src="../static/img/codes.jpg" width="100%" height="100%">
+                  {% elif material[11] == 2 %}
+                  <img src="../static/img/turism.jpg" width="100%" height="100%">
+                  {% elif material[11] == 3 %}
+                  <img src="../static/img/farm.jpg" width="100%" height="100%">
+                  {% elif material[11] == 8 %}
+                  <img src="../static/img/agroindustry.jpg" width="100%" height="100%">
+                  {% endif %}
+                  
+
+                </div>
+          
+                <div class="col_content">
+          
+                    <div class="head">
+                        <hp class="titulo">{{material[1]}}</hp> <span class="tema">Tema: {{material[8]}}</span>
+                    </div>
+          
+                    <div class="body">
+                        <h3>Autoría: {{material[4]}}</h3>
+                        <p>{{material[2]}}</p>
+                    </div>
+
+                    <div class="details">
+                        <span class="salt">Duración: {{material[5]}}</span> 
+                        <span>Nivel: {{material[6]}}</span>
+                    </div>
+                      
+                </div>
+              </div> 
+            {% endfor %}
+        </div>
+        
+
+        <!-- Video -->
+        
+        <div class="video_container" id="video_mostrar">
+          
+        </div>
+
+    </div>
+
+
+    <!-- MODAL QUE SE DEBE ABRIR -->
+  <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+  
+      <div class="head_title">
+          <h4>Registrar Material</h4>
+          <span class="close"></span>
+      </div>
+  
+  
+  <!--editar_video-->
+  <!-- Material -->
+  
+  
+    <form id="formulario" method="post" action="" enctype="multipart/form-data">  
+      <div class="Material">
+  
+        <input class="modal_input field_form" placeholder="Programación" type="file" name="uploadFile" id="uploadFile" accept=".mp4" >
+    
+        <label>
+          <span class="modal_input-title">Titulo</span>
+        </label>
+        <input class="modal_input" placeholder="Título del material" type="text" name="titulo"/>
+  
+        <label>
+            <span class="modal_input-title">Espacio Almacenamiento</span>
+        </label>
+        <input class="modal_input" placeholder="Espacio de Almacenamiento" type="text" name="espacio"/>
+        
+        <label>
+           <span class="modal_input-title"></span>
+        </label>
+        <select   class="modal_select" name="unidadMedida" id="unidadMedida">
+          <option value="MB">MB</option>
+          <option value="GB">GB</option>
+        </select>
+
+        <label>
+            <span class="modal_input-title">Duración</span>
+        </label>
+        <input class="modal_input" placeholder="Duración del video" type="text" name="duracion"/>
+        
+        <label>
+           <span class="modal_input-title"></span>
+        </label>
+        <select   class="modal_select" name="unidadMedidaDuracion" id="unidadMedidaDuracion">
+          <option value="Seg">Seg</option>
+          <option value="Min">Min</option>
+          <option value="Hora">H</option>
+        </select>
+
+        
+        <label>
+            <span class="modal_input-title">Profesor</span>
+          </label>
+          <select   class="modal_select" name="profesor" id="profesor">
+              {% for usuario in Usuarios %}
+                {% if usuario[5] != "Administrador" %}
+                  <option value="{{usuario[0]}}">{{usuario[1]}}</option>
+                {% endif %}
+              {% endfor %}
+          </select>
+
+        <label>
+            <span class="modal_input-title">Asignatura</span>
+          </label>
+          <select   class="modal_select" name="asignatura" id="asignatura">
+              {% for asignatura in Asignaturas %}
+                  <option value="{{ asignatura[0]}}">{{asignatura[1]}}</option>
+              {% endfor %}
+          </select>
+
+        <label>
+          <span class="modal_input-title">Tema</span>
+        </label>
+        <select   class="modal_select" name="tema" id="tema">
+          {% for tema in Temas %}
+            <option value="{{tema[0]}}">{{tema[1]}}</option>
+          {% endfor %}
+        </select>
+  
+  
+        <label>
+          <span class="modal_input-title">Descripción</span>
+        </label>
+  
+        <textarea class="modal_input description_modal" name="descripcion" id="" cols="30" rows="5"></textarea>
+ 
+  
+        <label>
+          <span class="modal_input-title">Nivel</span>
+        </label>
+        <select   class="modal_select" name="nivel" id="nivel">
+           <option value="7°">7°</option>
+           <option value="8°">8°</option>
+           <option value="9°">9°</option>
+           <option value="10°">10°</option>
+           <option value="11°">11°</option>
+           <option value="12°">12°</option>
+        </select>
+        
+      
+      </div>
+      
+      <div class="actions">
+        <div class="button_actions">
+          <button class="action action_save">Guardar</button>
+          <button class="action action_delete">Borrar</button>
+        </div>
+        
+      </div>
+      
+    </div>
+  
+  </div>
+
+  <div id="myModal_edit" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+  
+        <div class="head_title">
+            <h4>Editar Video</h4>
+            <span class="close_edit"></span>
+
+        </div>
+  
+        <!-- Video -->
+  
+  
+        <form method="post" action="{{url_for('editar_video')}}">
+
+            <div class="Usuario">
+  
+                <div class="field_form">
+                    <input type="hidden" name="idVideo" id="idVideo">
+                    <label>
+                        <span class="modal_input-title">Titulo</span>
+                    </label>
+                    <input class="modal_input" placeholder="Titulo del Video" type="text" name="titulo-edit" id="titulo-edit"/>
+    
+                    <label>
+                        <span class="modal_input-title">Autoría</span>
+                    </label>                   
+                    <select  class="modal_input" name="autoria-edit" id="autoria-edit">
+                      {% for usuario in Usuarios %}
+                          <option value="{{usuario[0]}}">{{usuario[1]}}</option>
+                      {% endfor %}
+                    </select> 
+
+                    <label>
+                      <span class="modal_input-title">Descripción</span>
+                    </label>
+                    <textarea class="modal_input description_modal" name="des-edit" id="des-edit" cols="30" rows="6"></textarea>
+
+
+                </div>
+
+                <div class="field_form">
+                    <label>
+                        <span class="modal_input-title">Nivel</span>
+                    </label>
+                    <select   class="modal_select" name="nivel-edit" id="nivel-edit">
+                      <option value="7°">7°</option>
+                      <option value="8°">8°</option>
+                      <option value="9°">9°</option>
+                      <option value="10°">10°</option>
+                      <option value="11°">11°</option>
+                      <option value="12°">12°</option>
+                    </select>
+
+
+                    <label>
+                        <span class="modal_input-title">Duracion</span>
+                    </label>
+                    <input  class="modal_input" type="text" placeholder="Duracion" name="duracion-edit" id="duracion-edit"/>
+
+                    <label>
+                      <span class="modal_input-title">Espacio</span>
+                    </label>
+                    <input  class="modal_input" type="text" placeholder="Espacio" name="espacio-edit" id="espacio-edit"/>
+
+                    <label>
+                      <span class="modal_input-title">Estado</span>
+                    </label>
+                    <select  class="modal_input" name="estado" id="estado">                
+                      <option value="Activo">Activo</option>
+                      <option value="Inactivo">Inactivo</option>         
+                    </select>  
+
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="button_actions">
+                    <button type="submit" class="action action_save">Guardar</button>
+                    
+                </div>
+            </div>
+
+        </form>
+      
+    </div>
+  
+  </div>
+
+
+
+
+
+  <script src="../static/funciones.js"></script>
+  <script>
+
+
+
+    // Get the modal
+  var modal = document.getElementById("myModal");
+  var formulario =   document.getElementById("formulario");
+
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("insert_user");
+
+  
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // When the user clicks on the button, open the modal
+  btn.onclick = function() {    
+    formulario.action = "{{url_for('guardarMaterial')}}"; 
+    modal.style.display = "block";
+  }
+
+
+
+  
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+    modal.style.display = "none";
+  }
+
+
+  
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  }
+
+
+  
+
+  function updateVideo(){
+    const formu = document.getElementById("formulario");
+    form.action = "{{url_for('editar_video')}}";
+  }
+  
+
+
+
+
+  
+  </script>
+        
+
+{% endblock %}

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAETA - Colegio Agropecuario San Carlos</title>
+    <!--<link rel="stylesheet" href="{{ url_for('static',filename='style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='usuarios.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='crear_usuarios.css')}}">-->
+    <link rel="stylesheet" href="{{ url_for('static',filename='login.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='style_completo.css')}}">
+
+    
+
+
+    <!-- Google Fonts loaded -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body id="body">
+
+    <div class="menu__side" id="menu_side">
+
+        <div class="options__menu">	
+
+            <img class="logo_menu" src="{{ url_for('static',filename='/icons/logo_menu.svg')}}" alt="">
+
+            {%block menu%}
+
+            {% endblock %}
+
+            <a href="{{url_for('departamentos')}}" class="selected">
+                <div class="option">
+                    <i class="Especialidades_Icon" title="Especialidades"></i>
+                    <h4>Departamentos</h4>
+                </div>
+            </a>
+
+            <a href="{{url_for('asignaturas')}}">
+                <div class="option">
+                    <i class="Asignaturas_Icon" title="Asignaturas"></i>
+                    <h4>Asignaturas</h4>
+                </div>
+            </a>
+
+            <a href="{{url_for('temas')}}">
+                <div class="option">
+                    <i class="temas_icon" title="Temas"></i>
+                    <h4>Temas</h4>
+                </div>
+            </a>
+            
+            <a href="{{url_for('usuarios')}}">
+                <div class="option">
+                    <i class="Usuarios_Icon" title="Usuarios"></i>
+                    <h4>Usuarios</h4>
+                </div>
+            </a>          
+
+            {% if current_user.iDdepartamento == 15 %}
+                <a href="{{url_for('Controlador_videos')}}">
+                    <div class="option">
+                        <i class="Video_Icon" title="Reproductor"></i>
+                        <h4>Videos</h4>
+                    </div>
+                </a>
+            {% else %}
+                <a href="{{url_for('videos')}}">
+                    <div class="option">
+                        <i class="Video_Icon" title="Reproductor"></i>
+                        <h4>Videos</h4>
+                    </div>
+                </a>
+            {% endif %}
+
+            
+
+        </div>
+
+        <div class="Profile_Button" style="color:black;">
+                <img class="img_p" style="border-radius: 20px;" src="{{ url_for('static',filename='/img/Perfil.png')}}" alt="">
+                <span class="scroll_button" id="btn_open" ></span>
+                <div class="text_profile">
+                <p class="name_profile">{{current_user.nombre}}</p>
+                <span class="type_users">{{current_user.tipo}}</span>
+                <br>
+                <a href="{{url_for('logout')}}"><button class="btn_cs">Cerrar Sesión</button></a>
+                
+                
+                </div>
+                
+        </div>
+
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="{{ category }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+    
+    {%block contenido%}
+
+    {% endblock %}
+    
+    <script src="{{ url_for('static',filename='index.js')}}"></script>
+</body>
+</html>
+

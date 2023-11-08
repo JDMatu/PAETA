@@ -1,0 +1,229 @@
+{% extends "maestra.html" %}
+
+{% block contenido %} 
+    <div class="title_container">
+        <h2 class="titulo" id="titulo">Departamentos</h2>
+        <p class="description" id="description">Módulo para crear, modificar, deshabilitar y consultar departamentos.</p>
+
+        <div class="actions" id="actions">
+            <button class="action" id="insert_user">Crear Departamento</button>
+            
+            <span class="icon_action"></span>
+        </div>
+    </div>
+
+
+    <div class="Table-g">
+        <div class="Table-row Table-header">
+            <div class="Table-row-item-depart u-Flex-check"> </div>
+            <div class="Table-row-item-depart u-Flex-nombre">Nombre</div>
+            
+            <div class="Table-row-item-depart u-Flex-estado">Estado</div>
+            <div class="Table-row-item-depart u-Flex-admin">Acciones</div>
+
+        </div>
+        {% for departamento in Departamentos%}
+
+            <div class='Table-row' id='user_table'>  <!-- Div con contenido de usuarios -->
+
+                <div class='Table-row-item-depart u-Flex-check' data-header='Select'> 
+                            
+                    <input  class='checkbox checkbox_user' type='checkbox' checked='checked'/>
+                            
+                </div>
+                    
+                <div class='Table-row-item-depart u-Flex-nombre' data-header='Nombre'>
+                    
+                    <img class='picture_profile' src='static/img/profile.png' alt=''>
+                    
+                    <div> <!-- Se usa el id de estos para modificar cada campo -->
+                        <p class='name_user' id='user_name'> {{departamento[1]}} </p>
+                        <p class='id_user' id='user_id'> {{departamento[0]}} </p>
+                    </div>
+                </div>
+
+                <div class='Table-row-item-depart u-Flex-estado' data-header='Estado' id='user_estado'> {{departamento[2]}} </div>
+                <div class='Table-row-item-depart u-Flex-estado' data-header='Acciones' id='user_estado'> 
+                    <div class="icons-actions"> 
+
+                        
+                            <button class="edit-user-btn" id="edit_user_btn" onclick="mostrarFormularioEdicion('{{departamento[0]}}','{{departamento[1]}}','{{departamento[2]}}')">
+                                <span class="icon-edit" id="edit-user"></span> 
+                            </button>
+                      
+                        
+                        <a href="{{url_for('deshabilitar_departamento', id=departamento[0])}}">
+                            <button class="trash-user-btn"  id="trash_user_btn">
+                                <span id="trash-user" class="icon-trash"></span> 
+                            </button>
+                        </a>
+                    </div> 
+                </div>
+            </div>
+            <!-- <div class='Table-row-item-depart u-Flex-correo' data-header='Correo' id='user_mail'>falpizar@iacsa.ed.cr</div> -->
+                    
+        {% endfor %}    
+    </div>
+
+    <!-- Modal Crear Usuario *******************************************************************************************-->
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+      
+            <div class="head_title">
+                <h4>Crear Departamento</h4>
+                <span class="close"></span>
+            </div>
+      
+            <!-- Usuario -->
+      
+      
+            <form method="post" action="{{url_for('formulario_crear_Departamento')}}">
+
+                <div class="Departamento">
+      
+                    <div class="field_form">
+                        <label>
+                            <span class="modal_input-title">Nombre</span>
+                        </label>
+                        <input class="modal_input" placeholder="Digite Nombre Completo" type="text" name="nombre"/>        
+                       
+                  
+                    </div>
+
+                </div>
+
+                <div class="actions">
+                    <div class="button_actions">
+                        <button type="submit" class="action action_save">Guardar</button>
+                        <!-- <button id="cancel" class="action action_delete">Cancelar</button> -->
+                    </div>
+                </div>
+
+            </form>
+          
+        </div>
+      
+    </div>
+
+     <!-- Modal Editar Usuario *******************************************************************************************-->
+
+     <div id="myModal_edit" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+      
+            <div class="head_title">
+                <h4>Editar Departamento</h4>
+                <span class="close_edit"></span>
+
+            </div>
+      
+            <!-- Usuario -->
+      
+      
+            <form method="post" action="{{url_for('actualizar_Departamento')}}">
+
+                <div class="Departamento">
+                    
+                    <div class="field_form">
+                        <input type="hidden" name="idDepartamento" id="idDepartamento">
+                        <label>
+                            <span class="modal_input-title">Nombre</span>
+                        </label>
+                        <input class="modal_input" placeholder="Nombre Completo" type="text" name="nombre-edit" id="nombre-edit"/>
+                    </div>
+    
+                    <div class="field_form">
+                        <select   class="modal_select" name="select-estado-edit" id="select-estado-edit">
+                            <option value="Activo"> Activo </option>
+                            <option value="Inactivo"> Inactivo </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <div class="button_actions">
+                        <button type="submit" class="action action_save">Guardar</button>
+                        <!-- <button id="cancel_edit" class="action action_delete">Cancelar</button> -->
+                    </div>
+                </div>
+
+            </form>
+          
+        </div>
+      
+    </div>
+      
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        var modal_edit = document.getElementById("myModal_edit");
+        
+        // Get the button that opens the modal
+        var btn = document.getElementById("insert_user");
+        //var cancel_btn = document.getElementById("cancel");
+
+        var btn_edit = document.getElementById("edit_user_btn");
+        //var cancel_btn_edit = document.getElementById("cancel_edit");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        var span_edit = document.getElementsByClassName("close_edit")[0];
+        
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+ 
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        span_edit.onclick = function() {
+            document.getElementById("myModal_edit").style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal_edit.style.display = "none";
+            }
+        }
+
+        // BOTÓN DE CERRAR
+        /*cancel_btn.onclick = function() {
+            modal.style.display = "none";
+        }*/
+
+        /*cancel_btn_edit.onclick = function() {
+            modal_edit.style.display = "none";
+        }*/
+
+        function mostrarFormularioEdicion(id, nombre, estado){                   
+            document.getElementById("idDepartamento").value = id;
+            document.getElementById("nombre-edit").value = nombre;
+            document.getElementById("select-estado-edit").value = estado;
+            document.getElementById("myModal_edit").style.display = "block";
+
+        }
+
+        if(window.history.replaceState)
+        {
+            window.history.replaceState(null,null,"/departamentos");
+        }
+
+    </script>
+
+   
+
+{% endblock %}

@@ -1,0 +1,287 @@
+{% extends "maestra.html" %}
+
+{% block contenido %} 
+    <div class="title_container">
+        <h2 class="titulo" id="titulo">Temas</h2>
+        <p class="description" id="description">Módulo para crear, modificar, deshabilitar y consultar temas.</p>
+
+        <div class="actions" id="actions">
+            <button class="action" id="insert_user">Crear Tema</button>
+            
+            <span class="icon_action"></span>
+        </div>
+    </div>
+
+
+    <div class="Table-g">
+        <div class="Table-row Table-header">
+            <div class="Table-row-item-asig u-Flex-check"> </div>      
+            <div class="Table-row-item-tem u-Flex-nombre">Nombre</div>            
+            <div class="Table-row-item-tem u-Flex-asignatura">Asignatura</div>
+            <div class="Table-row-item-tem u-Flex-estado">Estado</div>
+            <div class="Table-row-item-tem u-Flex-admin">Acciones</div>
+
+
+
+        </div>
+        {% for tema in temas %}
+
+            <div class='Table-row' id='user_table'>  <!-- Div con contenido de usuarios -->
+
+                <div class='Table-row-item-tem u-Flex-check' data-header='Select'> 
+                            
+                    <input  class='checkbox checkbox_user' type='checkbox' checked='checked'/>
+                            
+                </div>
+                    
+                <div class='Table-row-item-tem u-Flex-nombre' data-header='Nombre'>
+                    
+                    <img class='picture_profile' src='static/img/profile.png' alt=''>
+                    
+                    <div> <!-- Se usa el id de estos para modificar cada campo -->
+                        <p class='name_user' id='user_name'> {{tema[1]}} </p>
+                        <p class='id_user' id='user_id'> {{tema[0]}} </p>
+                    </div>
+                </div>
+
+                
+                <div class='Table-row-item-tem u-Flex-usuario' data-header='Usuario' id='username'> {{tema[3]}} </div>
+                <div class='Table-row-item-tem u-Flex-pas' data-header='Contraseña' id='user_password'> {{tema[4]}} </div>
+                <div class='Table-row-item-tem u-Flex-estado' data-header='Acciones' id='user_estado'> 
+                    <div class="icons-actions"> 
+
+                            <button id="edit_user_btn" onclick="mostrarFormularioEdicion('{{tema[0]}}','{{tema[1]}}','{{tema[2]}}','{{tema[3]}}')">
+                            
+                                <span class="icon-edit" id="edit-user"></span> 
+                            </button>
+                      
+                        
+                        <a href="{{url_for('deshabilitar_tema', id=tema[0])}}">
+                            <button id="trash_user_btn">
+                                <span id="trash-user" class="icon-trash"></span> 
+                            </button>
+                        </a>
+                    </div> 
+                </div>
+            </div>
+            <!-- <div class='Table-row-item-tem u-Flex-correo' data-header='Correo' id='user_mail'>falpizar@iacsa.ed.cr</div> -->
+                    
+        {% endfor %}    
+    </div>
+
+    <!-- Modal Crear Usuario *******************************************************************************************-->
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+      
+            <div class="head_title">
+                <h4>Crear Tema</h4>
+                <span class="close"></span>
+            </div>
+      
+            <!-- Tema -->
+      
+      
+            <form method="post" action="{{url_for('crearTema')}}">
+
+                <div class="Usuario">
+      
+                    <div class="field_form">
+                        <label>
+                            <span class="modal_input-title">Nombre</span>
+                        </label>
+                        <input class="modal_input" placeholder="Digite Nombre Tema" type="text" name="nombre"/>
+                        <!--
+          
+                        <label>
+                            <span class="modal_input-title">idAsignatura</span>
+                        </label>
+                        <input class="modal_input" placeholder="Digite idAsignatura" type="text" name="idAsignatura"/>
+                        -->
+
+                        <label>
+                            <span class="modal_input-title">Asignatura</span>
+                        </label>
+
+                        <select   class="modal_select" name="asignatura" id="asignatura">
+                            {% for asignatura in Asignaturas %}
+                                <option value="{{asignatura[0]}}"> {{asignatura[1]}} </option>                              
+                            {% endfor %}
+                        </select>
+
+                    </div>
+
+                    <!--
+                    <div class="field_form">
+                        <label>
+                            <span class="modal_input-title">Contraseña</span>
+                        </label>
+                        <input  class="modal_input" type="password" placeholder="Digite Contraseña" name="contraseña"/>
+            
+                        <label>
+                            <span class="modal_input-title">Tipo de Usuario</span>
+                        </label>
+                        <select   class="modal_select" name="tipo" id="">
+                            <option value="Normal"> Normal </option>
+                            <option value="Administrador"> Administrador </option>
+                        </select>
+                       
+                    </div>
+                    -->
+                </div>
+
+                <div class="actions">
+                    <div class="button_actions">
+                        <button type="submit" class="action action_save">Guardar</button>
+                        <!-- <button id="cancel" class="action action_delete">Cancelar</button> -->
+                    </div>
+                </div>
+
+            </form>
+          
+        </div>
+      
+    </div>
+
+     <!-- Modal Editar Usuario *******************************************************************************************-->
+
+     <div id="myModal_edit" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+      
+            <div class="head_title">
+                <h4>Editar Tema</h4>
+                <span class="close_edit"></span>
+
+            </div>
+      
+            <!-- Usuario -->
+      
+      
+            <form method="post" action="{{url_for('editarTema')}}">
+
+                <div class="Usuario">
+      
+                    <div class="field_form">
+
+                        <input type="hidden" name="idTema" id="idTema">
+
+                        <label>
+                            <span class="modal_input-title">Nombre</span>
+                        </label>
+                        <input class="modal_input" placeholder="Nombre Completo" type="text" name="nombre-edit" id="nombre-edit"/>
+          
+                        <label>
+                            <span class="modal_input-title">Asignatura</span>
+                        </label>
+
+                        <select   class="modal_select" name="asignatura-edit" id="asignatura-edit">
+                            {% for asignatura in Asignaturas %}
+                                <option value="{{asignatura[0]}}"> {{asignatura[1]}} </option>                              
+                            {% endfor %}
+                        </select>
+
+                        <label>
+                            <span class="modal_input-title">Estado</span>
+                        </label>
+                        <select   class="modal_select" name="estado" id="estado">
+                            <option value="Activo"> Activo </option>
+                            <option value="Inactivo"> Inactivo </option>
+                        </select>
+                       
+
+                    </div>
+
+                 
+                </div>
+
+                <div class="actions">
+                    <div class="button_actions">
+                        <button type="submit" class="action action_save">Guardar</button>
+                        <!-- <button id="cancel_edit" class="action action_delete">Cancelar</button> -->
+                    </div>
+                </div>
+
+            </form>
+          
+        </div>
+      
+    </div>
+      
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+        var modal_edit = document.getElementById("myModal_edit");
+        
+        // Get the button that opens the modal
+        var btn = document.getElementById("insert_user");
+        //var cancel_btn = document.getElementById("cancel");
+
+        var btn_edit = document.getElementById("edit_user_btn");
+        //var cancel_btn_edit = document.getElementById("cancel_edit");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        var span_edit = document.getElementsByClassName("close_edit")[0];
+        
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+ 
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        span_edit.onclick = function() {
+            document.getElementById("myModal_edit").style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal_edit.style.display = "none";
+            }
+        }
+
+        // BOTÓN DE CERRAR
+        /*cancel_btn.onclick = function() {
+            modal.style.display = "none";
+        }*/
+
+        /*cancel_btn_edit.onclick = function() {
+            modal_edit.style.display = "none";
+        }*/
+
+        function mostrarFormularioEdicion(id, nombre, asignatura, estado){       
+            
+            console.log(asignatura);
+            document.getElementById("idTema").value = id;
+            document.getElementById("nombre-edit").value = nombre;
+            document.getElementById("asignatura-edit").value = asignatura;
+            document.getElementById("estado").value = estado;
+            document.getElementById("myModal_edit").style.display = "block";
+
+        }
+
+        if(window.history.replaceState)
+        {
+            window.history.replaceState(null,null,"/temas");
+        }
+
+    </script>
+
+   
+
+{% endblock %}

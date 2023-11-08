@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión - PAETA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/login.css">
+
+        
+</head>
+<body>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="{{ category }}" role="alert">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="log-in-box">
+        <div class="log">
+
+
+            <div class="log-container">
+
+            <span class="log-logo"></span>
+
+            <p class="log-p" >
+                Producción Audiovisual para las Especialidades Técnicas y Académicas 
+            </p>
+
+            <form method="post" action="{{url_for('login')}}">
+                <input class="input-log" type="text" name="username" placeholder="Username">
+                <input class="input-log" type="password" name="password" placeholder="Password">
+                <button type="submit" class="log-btn-in">Ingresar</button>
+            </form>
+
+
+            <p class="log-p">
+                Si aún no está registrado en la aplicación, puedes contactar con el Colegio Agropecuario
+            </p>
+
+            </div>
+            
+
+        </div>
+    </div>
+    
+</body>
+</html>

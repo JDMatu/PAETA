@@ -1,0 +1,194 @@
+/* The Modal (background) */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+html{
+  font-size: 62.5%;
+  font-family: 'Manrope', sans-serif;
+}
+
+.modal .modal-content h4 {
+  font-size: 1.8rem;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+
+  /*botones de acción*/
+  .button_actions {
+    display: flex;
+    gap: 12px;
+  }
+  .button_actions .action_save {
+    background-color: #2ED47A;
+
+  }
+  .button_actions .action_delete {
+    background-color: #E30000;
+  }
+
+  .button_actions .action_save:hover {
+    background-color: #1eac5e;
+
+  }
+  .button_actions .action_delete:hover {
+    background-color: #af0202;
+  }
+  .button_actions .action_save:active {
+    background-color: #138546;
+
+  }
+  .button_actions .action_delete:active {
+    background-color: #7e0000;
+  }
+
+
+  .action {
+    margin-bottom: 24px;
+    padding: 10px 16px;
+    font-size: 1.7rem;
+    color: white;
+    border: none;
+    border-radius: 6px;
+  }
+
+  .actions p {
+    font-size: 1.7rem;
+    color: #90A0B7;
+    margin: 12px 0px;
+  }
+
+  /*Cerrar boton*/
+  
+  .close {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background-image: url('/Modal/icons/x.svg');
+  }
+
+
+  /* Modal Content/Box */
+  .modal-content {
+    border-radius: 8px;
+    border: solid 1px #C2CFE0;
+
+    background-color: #fff;
+    margin: 15% auto; 
+    padding: 0px 24px;
+    width: 80%; 
+  }
+
+  .head_title{
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+  
+
+  .close:hover,
+  .close:focus {
+    cursor: pointer;
+  }
+
+  .Usuario {
+    display: flex;
+    gap: 24px;
+    
+    margin: 12px 0px;
+  }
+
+  .Usuario .field_form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+  }
+
+
+
+  .modal_input-title {
+    font-size: 1.7rem;
+    color: #90A0B7;
+    margin-bottom: 12px;
+  }
+
+
+  .modal_input{
+    padding: 14px 16px;
+    margin: 12px 0px;
+
+    font-family: 'Manrope';
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #323C47;
+
+    border-radius: 6px;
+    outline: none;
+    border: 1px solid #C2CFE0 ;
+  }
+
+  .modal_input::placeholder{
+    font-family: 'Manrope';
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #90A0B7;
+  }
+
+  .modal_select{
+    padding: 14px 16px;
+    margin: 12px 0px;
+    padding-right: 12px;
+    border-radius: 6px;
+    outline: none;
+    border: 1px solid #C2CFE0 ;
+
+    font-family: 'Manrope';
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #323C47;
+  }
+
+.Departamento {
+  display: flex;
+  flex-direction: column;
+}
+
+.Asignatura {
+  display: flex;
+  flex-direction: column;
+}
+
+.Material {
+  display: flex;
+  flex-direction: column;
+}
+
+.field_form {
+    font-size: 1.7rem;
+    color: #90A0B7;
+}
+
+.field_form input{
+    font-size: 1.7rem;
+    color: #90A0B7;
+    margin-left: 8px;
+}

@@ -1,0 +1,107 @@
+{% extends "maestra.html" %}
+
+{% block contenido %} 
+    <div class="title_container">
+      <div class="especialidad">
+        {% if Materiales[0][11] == 1 %}
+        <img src="../static/img/info.jpg" width="60%" height="200px">
+        {% elif Materiales[0][11] == 2 %}
+        <img src="../static/img/turismo1.jpg" width="60%" height="200px">
+        {% elif Materiales[0][11] == 3 %}
+        <img src="../static/img/agropecuaria.jpg" width="60%" height="200px">
+        {% elif Materiales[0][11] == 8 %}
+        <img src="../static/img/agroindustria.jpg" width="60%" height="200px">
+        {% endif %}
+      </div>
+      
+    </div>
+
+    <div class="buscadores">
+
+      <div class="buscador_container">
+          <span class="icon_buscador"></span>
+          <input type="text" name="" class="buscador" id="buscador" placeholder="Buscar">
+      </div>
+
+      <div class="filtrador_container">
+          <select class="filtrador" name="select_tema" id="select_tema" onchange="VideosXtemas(this.value)">
+            <option value="" >Seleccionar Tema</option>
+            {% for tema in Temas%}
+              <option value= {{tema[0]}}>{{tema[1]}}</option>
+            {% endfor%}
+          </select>
+
+      </div>
+
+    </div>
+
+    <div class="complete-videoprev-video">
+
+        <!-- Videos -->
+
+        <div class="videos_container">
+
+            {% for material in Materiales %}
+            
+              <div class="PrevVideo" style="cursor:pointer;" data-video-id="{{ material[0] }}"> 
+
+                <div class="col_img">
+                  <!--
+                  <video class="video_class" disable preload="metadata" >
+                    <source src="../static/videos/{{material[1]}}.mp4" >
+                  </video>
+                  -->
+
+                  {% if material[11] == 1 %}
+                  <img src="../static/img/codes.jpg" width="100%" height="100%">
+                  {% elif material[11] == 2 %}
+                  <img src="../static/img/turism.jpg" width="100%" height="100%">
+                  {% elif material[11] == 3 %}
+                  <img src="../static/img/farm.jpg" width="100%" height="100%">
+                  {% elif material[11] == 8 %}
+                  <img src="../static/img/agroindustry.jpg" width="100%" height="100%">
+                  {% endif %}
+                  
+
+                </div>
+          
+                <div class="col_content">
+          
+                    <div class="head">
+                        <hp class="titulo">{{material[1]}}</hp> <span class="tema">Tema: {{material[8]}}</span>
+                    </div>
+          
+                    <div class="body">
+                        <h3>Autoría: {{material[4]}}</h3>
+                        <p>{{material[2]}}</p>
+                    </div>
+
+                    <div class="details">
+                        <span class="salt">Duración: {{material[5]}}</span> 
+                        <span>Nivel: {{material[6]}}</span>
+                    </div>
+                      
+                </div>
+              </div> 
+            {% endfor %}
+        </div>
+        
+
+        <!-- Video -->
+        
+        <div class="video_container" id="video_mostrar">
+          
+        </div>
+
+    </div>
+
+  <!---->
+  
+
+  <script src="../static/funciones.js"></script>
+  
+        
+
+{% endblock %}
+
+
