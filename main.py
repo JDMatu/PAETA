@@ -1,4 +1,3 @@
-import imp
 from flask import Flask, render_template, request, redirect, flash, url_for, jsonify
 import os
 import urllib.request
@@ -9,6 +8,8 @@ import controlador_departamentos
 import controlador_temas
 import controlador_material
 from controlador_guardar_videos import video_config
+from dotenv import load_dotenv
+
 
 #Libreria de control de usuarios
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
@@ -20,8 +21,7 @@ from functools import wraps
 #Importar la clase de usuarios
 from src.models.User import User1
 
- 
-
+load_dotenv()
 
 
 
@@ -35,7 +35,7 @@ app = Flask(__name__)
 login_manager = LoginManager(app)
 
 #Configurar la llave secreta de la aplicacion
-app.config['SECRET_KEY'] = 'jJNHhsjUlo91QD3f0Ej33KgfifQ7mHjiAxlG7gBca4o'
+app.config['SECRET_KEY'] = os.getenv('APP_Secret')
 
 #Funcion que carga los datos del usuario desde la base de datos 
 #cada que vez que el usuario recarga la pagina
@@ -66,7 +66,7 @@ def home():
 #Redirecciona a usuarios no logeados a log in
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    return redirect('/login')
+    return redirect(url_for('login'))
 
 
 
@@ -129,7 +129,7 @@ def formulario_crear_Departamento():
             controlador_departamentos.crear_Departamento(nombre)
             Departamentos = controlador_departamentos.buscarDepartamentosRegistrados()
             # De cualquier modo, y si todo fue bien, redireccionar
-            return redirect("/departamentos")
+            return redirect(url_for('departamentos'))
         else:
             return home()
     else:
@@ -143,7 +143,7 @@ def formulario_crear_Departamento():
 def deshabilitar_departamento(id):
     if administrador():
         controlador_departamentos.desactivar_Departamento(id)
-        return redirect("/departamentos")
+        return redirect(url_for('departamentos'))
     else:
         home()
 
@@ -157,7 +157,7 @@ def actualizar_Departamento():
         nombre = request.form["nombre-edit"]   
         estado = request.form["select-estado-edit"]
         controlador_departamentos.modificar_Departamento(id, nombre, estado)   
-        return redirect("/departamentos")
+        return redirect(url_for('departamentos'))
     else:
         return home()
 
@@ -201,7 +201,7 @@ def editarUsuario():
 def deshabilitar_usuario(id):
     if administrador():
         controlador_usuarios.eliminarUsuario(id)
-        return redirect("/usuarios")
+        return redirect(url_for('usuarios'))
     else:
         return home()
 
@@ -253,9 +253,9 @@ def guardar_Asignatura():
             idDepartamento = request.form["departamentoA"]
             controlador_asignaturas.CrearAsignatura(nombre,idDepartamento)
             # De cualquier modo, y si todo fue bien, redireccionar
-            return redirect("/asignaturas")
+            return redirect(url_for('asignaturas'))
         else:
-            return redirect('/asignaturas')
+            return redirect(url_for('asignaturas'))
     else:
         return home()
 
@@ -272,9 +272,9 @@ def modificar_Asignatura():
             idDepartamento = request.form["departamentoA"]
             Estado = request.form["estado"]
             controlador_asignaturas.ModificarAsignatura(id,nombre,idDepartamento,Estado)
-            return redirect("/asignaturas")
+            return redirect(url_for('asignaturas'))
         else:
-            return redirect("/asignaturas")
+            return redirect(url_for('asignaturas'))
     else:
         return home()
 
@@ -284,7 +284,7 @@ def modificar_Asignatura():
 def eliminar_asignatura(id):
     if administrador():
         controlador_asignaturas.eliminarAsignatura(id)
-        return redirect("/asignaturas")
+        return redirect(url_for('asignaturas'))
     else:
         return home()
 
@@ -316,7 +316,7 @@ def crearTema():
     if administrador():
         controlador_temas.crearTema(request.form["nombre"], request.form["asignatura"])
         temas = controlador_temas.buscarTemasRegistrados()
-        return redirect("/temas")
+        return redirect(url_for('temas'))
     else:
         return home()
 
@@ -327,7 +327,7 @@ def editarTema():
     if administrador():
         controlador_temas.modificarTema(request.form["idTema"], request.form["nombre-edit"], request.form["asignatura-edit"],request.form["estado"])
         temas = controlador_temas.buscarTemasRegistrados() 
-        return redirect("/temas")
+        return redirect(url_for('temas'))
     else:
         return home()
 
@@ -336,7 +336,7 @@ def editarTema():
 def deshabilitar_tema(id):
     if administrador():
         controlador_temas.eliminarTema(id)
-        return redirect("/temas")
+        return redirect(url_for('temas'))
     else:
         return home()
 
@@ -376,7 +376,7 @@ def guardarMaterial():
         os.rename(os.path.join(app.config['UPLOAD_FOLDER']) + '/' + filename, os.path.join(app.config['UPLOAD_FOLDER']) + '/' + t + '.mp4')
     
 
-    return redirect("/Controlador_videos")
+    return redirect(url_for('Controlador_videos'))
 
 
 
@@ -466,7 +466,7 @@ def deshabilitar_material():
     id = request.args.get('id')
     if administrador():
         controlador_material.eliminarMaterial(id)
-        return redirect("/Controlador_videos")
+        return redirect(url_for('Controlador_videos'))
     else:
         home()
 
@@ -477,8 +477,8 @@ def editar_video():
     if administrador():
         if request.method == "POST":
             controlador_material.modificarMaterial(request.form["idVideo"], request.form["titulo-edit"], request.form["des-edit"], request.form["autoria-edit"], request.form["nivel-edit"], request.form["duracion-edit"], request.form["espacio-edit"], request.form["estado"])
-            return redirect("/Controlador_videos")
-        return redirect("/Controlador_videos")
+            return redirect(url_for('Controlador_videos'))
+        return redirect(url_for('Controlador_videos'))
     else:
         home()
 
@@ -493,9 +493,7 @@ def editar_video():
 @login_required
 def logout():
     logout_user()
-    
-    
-    return redirect("/login")
+    return redirect(url_for('login'))
 
 #Inicialilzacion del servidor
 if __name__ == "__main__":
